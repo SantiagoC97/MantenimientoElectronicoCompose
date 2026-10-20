@@ -1,0 +1,28 @@
+ACTUALIZACION: MantenimientoElectronicoCompose
+
+ESTE PAQUETE ES EXCLUSIVAMENTE PARA LA COPIA NUEVA.
+No extraer sobre MantenimientoElectronicoApp (la actividad ya entregada).
+
+1. Cerrar Android Studio o guardar los archivos abiertos.
+2. Copiar este ZIP a C:\Users\santi\Downloads (o usar su carpeta de descargas).
+3. Extraer el contenido sobre:
+   C:\Users\santi\AndroidStudioProjects\MantenimientoElectronicoCompose
+   Sobrescribir MainActivity.kt, archivos de tema y los dos Gradle indicados.
+4. Abrir MantenimientoElectronicoCompose en Android Studio y sincronizar Gradle.
+5. Conectar Huawei, seleccionar 'app' y pulsar Run.
+
+Las dependencias agregadas son exclusivamente navigation-compose 2.9.8.
+Se preservan las versiones aportadas por el usuario.
+No se incluyen ni copian archivos .git ni ninguna conexion a GitHub.
+El package de Kotlin conserva com.example.mantenimientoelectronicoapp;
+el applicationId distinto mantiene las aplicaciones separadas en Android.
+
+PRUEBAS
+- Barra inferior: Inicio, Solicitudes, Registrar.
+- Buscar 'Epson' y texto inexistente.
+- Guardar con campos vacios (mostrar validacion).
+- Registrar un equipo nuevo y comprobar que aparezca.
+- Avanzar estado de una solicitud y confirmar el panel de Inicio.
+- Los datos son temporales: se conservan al navegar, no al cerrar el proceso.
+
+Si aparece un fallo de compilacion, compartir captura de Build Output.
