@@ -1,5 +1,7 @@
 ﻿# Sistema de Mantenimiento Electrónico
 
+ ## Nombre: Santiago Cano Orozco
+
 ## Descripción
 
 Aplicación Android desarrollada para la asignatura Aplicativos Móviles. Su propósito es facilitar la visualización, el registro y el seguimiento de solicitudes de mantenimiento de equipos electrónicos.
