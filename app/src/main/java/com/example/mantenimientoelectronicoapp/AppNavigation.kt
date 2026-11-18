@@ -65,14 +65,17 @@ fun AppNavigation() {
             it.id == mantenimiento.equipoId
         }
 
+
         SolicitudMantenimiento(
             codigo = "MT-%03d".format(mantenimiento.id),
             equipo = equipo?.nombre ?: "Equipo no encontrado",
             tipo = equipo?.tipo ?: "Sin especificar",
             problema = mantenimiento.problema,
             estado = mantenimiento.estado,
-            prioridad = mantenimiento.prioridad
+            prioridad = mantenimiento.prioridad,
+            tipoMantenimiento = mantenimiento.tipoMantenimiento
         )
+
     }
 
     val navController = rememberNavController()
@@ -158,12 +161,14 @@ fun AppNavigation() {
                             it.id == id
                         }
 
+
                         if (mantenimiento != null) {
                             mantenimientoViewModel.avanzarEstado(
                                 mantenimiento
                             )
                         }
                     },
+
 
                     onEliminar = { codigo ->
 
@@ -180,16 +185,41 @@ fun AppNavigation() {
                                 mantenimiento
                             )
                         }
+                    },
+
+
+                    onEditar = { codigo, problema, tipoMantenimiento, prioridad ->
+
+                        val id = codigo
+                            .removePrefix("MT-")
+                            .toLongOrNull()
+
+                        val mantenimiento = mantenimientos.firstOrNull {
+                            it.id == id
+                        }
+
+                        if (mantenimiento != null) {
+                            mantenimientoViewModel.editarMantenimiento(
+                                mantenimiento.copy(
+                                    problema = problema,
+                                    tipoMantenimiento = tipoMantenimiento,
+                                    prioridad = prioridad
+                                )
+                            )
+                        }
                     }
                 )
             }
 
 
+
             // EQUIPOS: registro persistente
+
             composable("equipos") {
 
                 PantallaEquipos(
                     equipos = equipos,
+
                     onRegistrarEquipo = { nombre, tipo, ubicacion ->
 
                         mantenimientoViewModel.registrarEquipo(
@@ -199,9 +229,17 @@ fun AppNavigation() {
                                 ubicacion = ubicacion
                             )
                         )
+                    },
+
+                    onGenerarDatosPrueba = {
+                        mantenimientoViewModel.generarDatosPrueba()
+                    },
+                    onEliminarEquipo = { equipoId ->
+                        mantenimientoViewModel.eliminarEquipoConHistorial(equipoId)
                     }
                 )
             }
+
 
             // REGISTRAR: mantenimiento asociado a un equipo
             composable("registrar") {

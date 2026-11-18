@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import androidx.room.Transaction
 
 @Dao
 interface EquipoDao {
@@ -24,4 +25,18 @@ interface EquipoDao {
 
     @Delete
     suspend fun eliminar(equipo: EquipoEntity): Int
+
+
+    @Query("DELETE FROM mantenimientos WHERE equipoId = :id")
+    suspend fun eliminarHistorialDeEquipo(id: Long): Int
+
+    @Query("DELETE FROM equipos WHERE id = :id")
+    suspend fun eliminarEquipoPorId(id: Long): Int
+
+    @Transaction
+    suspend fun eliminarEquipoCompleto(id: Long) {
+        eliminarHistorialDeEquipo(id)
+        eliminarEquipoPorId(id)
+    }
+
 }

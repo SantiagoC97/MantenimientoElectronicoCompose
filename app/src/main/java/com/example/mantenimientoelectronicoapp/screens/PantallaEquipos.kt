@@ -14,6 +14,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.OutlinedButton
+
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.remember
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,12 +36,20 @@ import com.example.mantenimientoelectronicoapp.ui.theme.MantenimientoElectronico
 @Composable
 fun PantallaEquipos(
     equipos: List<EquipoEntity>,
-    onRegistrarEquipo: (String, String, String) -> Unit
+    onRegistrarEquipo: (String, String, String) -> Unit,
+    onGenerarDatosPrueba: () -> Unit = {},
+    onEliminarEquipo: (Long) -> Unit = {}
 ) {
+
     var nombre by rememberSaveable { mutableStateOf("") }
     var tipo by rememberSaveable { mutableStateOf("") }
     var ubicacion by rememberSaveable { mutableStateOf("") }
     var mostrarErrores by rememberSaveable { mutableStateOf(false) }
+
+    var equipoAEliminar by remember {
+        mutableStateOf<EquipoEntity?>(null)
+    }
+
 
     LazyColumn(
         modifier = Modifier
@@ -122,6 +136,18 @@ fun PantallaEquipos(
             }
         }
 
+
+        item {
+            OutlinedButton(
+                onClick = onGenerarDatosPrueba,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Generar datos de prueba")
+            }
+        }
+
+
+
         item {
             Text(
                 "Equipos registrados (${equipos.size})",
@@ -152,10 +178,71 @@ fun PantallaEquipos(
                     Text("Tipo: ${equipo.tipo}")
                     Text("Ubicación: ${equipo.ubicacion}")
                     Text("ID: ${equipo.id}")
+
+                    TextButton(
+                        onClick = {
+                            equipoAEliminar = equipo
+                        }
+                    ) {
+                        Text(
+                            text = "Eliminar equipo",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+
                 }
             }
         }
     }
+
+    val equipoSeleccionado = equipoAEliminar
+
+    if (equipoSeleccionado != null) {
+
+        AlertDialog(
+            onDismissRequest = {
+                equipoAEliminar = null
+            },
+
+            title = {
+                Text("Eliminar equipo")
+            },
+
+            text = {
+                Text(
+                    "¿Deseas eliminar ${equipoSeleccionado.nombre}? " +
+                            "También se eliminarán todos los mantenimientos " +
+                            "asociados a este equipo. " +
+                            "Esta acción no se puede deshacer."
+                )
+            },
+
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onEliminarEquipo(equipoSeleccionado.id)
+                        equipoAEliminar = null
+                    }
+                ) {
+                    Text(
+                        "Eliminar todo",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        equipoAEliminar = null
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
 }
 
 @Preview(showBackground = true)

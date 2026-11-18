@@ -1,14 +1,17 @@
 package com.example.mantenimientoelectronicoapp
 
 /** Modelo local de una solicitud de mantenimiento. */
+
 data class SolicitudMantenimiento(
     val codigo: String,
     val equipo: String,
     val tipo: String,
     val problema: String,
     val estado: String,
-    val prioridad: String
+    val prioridad: String,
+    val tipoMantenimiento: String = "Correctivo"
 )
+
 
 /** Datos simulados reutilizados de la primera actividad. */
 fun solicitudesIniciales(): List<SolicitudMantenimiento> = listOf(

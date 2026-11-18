@@ -58,4 +58,21 @@ class MantenimientoRepository(
         mantenimiento: MantenimientoEntity
     ): Int =
         mantenimientoDao.eliminar(mantenimiento)
+
+
+    suspend fun cambiarEstado(
+        id: Long,
+        estadoActual: String,
+        nuevoEstado: String
+    ): Int {
+        return mantenimientoDao.cambiarEstado(
+            id = id,
+            estadoActual = estadoActual,
+            nuevoEstado = nuevoEstado
+        )
+    }
+
+    suspend fun eliminarEquipoConHistorial(id: Long) {
+        equipoDao.eliminarEquipoCompleto(id)
+    }
 }

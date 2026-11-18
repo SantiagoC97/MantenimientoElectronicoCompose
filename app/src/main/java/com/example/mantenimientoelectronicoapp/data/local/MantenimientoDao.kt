@@ -38,6 +38,19 @@ interface MantenimientoDao {
         mantenimiento: MantenimientoEntity
     ): Int
 
+
+    @Query(
+        "UPDATE mantenimientos " +
+                "SET estado = :nuevoEstado " +
+                "WHERE id = :id AND estado = :estadoActual"
+    )
+    suspend fun cambiarEstado(
+        id: Long,
+        estadoActual: String,
+        nuevoEstado: String
+    ): Int
+
+
     @Delete
     suspend fun eliminar(
         mantenimiento: MantenimientoEntity
