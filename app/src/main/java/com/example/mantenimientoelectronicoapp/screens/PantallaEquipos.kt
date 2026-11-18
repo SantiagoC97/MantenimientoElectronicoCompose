@@ -33,9 +33,17 @@ import com.example.mantenimientoelectronicoapp.ui.theme.AzulOscuro
 import com.example.mantenimientoelectronicoapp.ui.theme.FondoPantalla
 import com.example.mantenimientoelectronicoapp.ui.theme.MantenimientoElectronicoTheme
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.heightIn
+import com.example.mantenimientoelectronicoapp.data.local.MantenimientoEntity
+import androidx.compose.material3.HorizontalDivider
+
+
 @Composable
 fun PantallaEquipos(
     equipos: List<EquipoEntity>,
+    mantenimientos: List<MantenimientoEntity> = emptyList(),
     onRegistrarEquipo: (String, String, String) -> Unit,
     onGenerarDatosPrueba: () -> Unit = {},
     onEliminarEquipo: (Long) -> Unit = {}
@@ -49,6 +57,11 @@ fun PantallaEquipos(
     var equipoAEliminar by remember {
         mutableStateOf<EquipoEntity?>(null)
     }
+
+    var equipoParaHistorial by remember {
+        mutableStateOf<EquipoEntity?>(null)
+    }
+
 
 
     LazyColumn(
@@ -181,6 +194,15 @@ fun PantallaEquipos(
 
                     TextButton(
                         onClick = {
+                            equipoParaHistorial = equipo
+                        }
+                    ) {
+                        Text("Ver historial")
+                    }
+
+
+                    TextButton(
+                        onClick = {
                             equipoAEliminar = equipo
                         }
                     ) {
@@ -242,6 +264,63 @@ fun PantallaEquipos(
             }
         )
     }
+
+    val equipoSeleccionadoHistorial = equipoParaHistorial
+
+    if (equipoSeleccionadoHistorial != null) {
+
+        val historial = mantenimientos.filter {
+            it.equipoId == equipoSeleccionadoHistorial.id
+        }
+
+        AlertDialog(
+            onDismissRequest = {
+                equipoParaHistorial = null
+            },
+            title = {
+                Text("Historial de mantenimiento")
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .heightIn(max = 380.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(equipoSeleccionadoHistorial.nombre)
+                    Text("${historial.size} intervención(es)")
+
+                    if (historial.isEmpty()) {
+                        Text("Este equipo no tiene mantenimientos registrados.")
+                    } else {
+                        historial.forEach { mantenimiento ->
+                            HorizontalDivider()
+
+                            Text(
+                                "Mantenimiento MT-%03d".format(
+                                    mantenimiento.id
+                                )
+                            )
+                            Text("Tipo: ${mantenimiento.tipoMantenimiento}")
+                            Text("Estado: ${mantenimiento.estado}")
+                            Text("Prioridad: ${mantenimiento.prioridad}")
+                            Text(mantenimiento.problema)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        equipoParaHistorial = null
+                    }
+                ) {
+                    Text("Cerrar")
+                }
+            }
+        )
+    }
+
 
 }
 

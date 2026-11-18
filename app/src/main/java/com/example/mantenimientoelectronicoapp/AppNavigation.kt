@@ -219,6 +219,7 @@ fun AppNavigation() {
 
                 PantallaEquipos(
                     equipos = equipos,
+                    mantenimientos = mantenimientos,
 
                     onRegistrarEquipo = { nombre, tipo, ubicacion ->
 
